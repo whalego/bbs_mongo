@@ -1,2 +1,2 @@
 /cache/*
-!/cache/picture/.gitignore
+!/cache/.gitignore
