@@ -2,27 +2,35 @@
 <html>
 <title>index</title>
 <body>
-<form method="POST" action="/form">
+<form method="POST" action="/form"  enctype="multipart/form-data">
     <p>文章<input type="text" name="text"></p>
     <p>名前<input type="text" name="name"></p>
+    <p>画像<input type="file" name="pict"></p>
     <p><input type="submit" value="submit"></p>
 </form>
+{% for message in get_flashed_messages() %}
+<p>{{ message }}</p>
+{% endfor %}
 <table>
     <tr>
         <td>日付</td>
         <td>名前</td>
         <td>コメント</td>
+        <td>画像</td>
     </tr>
     {% for item in item_list %}
         <tr>
             <td>{{item.date}}</td>
             <td>{{item.author}}</td>
             <td>{{item.text}}</td>
+            {% if item.pict == "" %}
+                <td>""</td>
+            {% else %}
+                <td><img src="\{{ item.pict }}"　alt="さむね">{{item.pict}}</td>
+                <td><img src="cache\picture\20190918171753.jpg"　alt="さむね">{{item.pict}}</td>
+            {% endif %}
         </tr>
     {% endfor %}
-
-
-
 </table>
 </body>
 </html>

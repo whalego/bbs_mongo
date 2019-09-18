@@ -8,13 +8,21 @@ class DBConnection:
         self.db = self.client.test_database
         self.collection = self.db.test_collection
 
-    def insert_db(self, user_name, text):
-        post = {
-            "author": user_name,
-            "text": text,
-            "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S")
-        }
-        self.collection.insert_one(post)
+    def insert_db(self, user_name, text, pict_url=""):
+        try:
+            post = {
+                "author": user_name,
+                "text": text,
+                "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S"),
+                "pict": pict_url
+            }
+
+            self.collection.insert_one(post)
+        except Exception as e:
+            print(e)
+            return "failed"
+
+        return "succeed"
 
     def insert_db_many(self):
         pass
