@@ -8,7 +8,7 @@ class DBConnection:
         self.db = self.client.test_database
         self.collection = self.db.test_collection
 
-    def insert_db(self, user_name, text, pict_url=""):
+    def insert_db(self, user_name, text, pict_url=None):
         try:
             post = {
                 "author": user_name,

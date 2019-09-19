@@ -23,11 +23,10 @@
             <td>{{item.date}}</td>
             <td>{{item.author}}</td>
             <td>{{item.text}}</td>
-            {% if item.pict == "" %}
-                <td>""</td>
+            {% if item.pict == "" or item.pict == None %}
+                <td></td>
             {% else %}
-                <td><img src="\{{ item.pict }}"　alt="さむね">{{item.pict}}</td>
-                <td><img src="cache\picture\20190918171753.jpg"　alt="さむね">{{item.pict}}</td>
+                <td><img src="{{ item.pict }}"　alt="さむね"></td>
             {% endif %}
         </tr>
     {% endfor %}
