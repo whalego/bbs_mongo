@@ -10,3 +10,5 @@ windowsのcmdプロンプトより以下を実施しておく。
 mongod --dbpath <cahce_directory>
 ```
 ※Pycharm上のプロンプトからではなぜか実行できなかった。
+
+画像のアップロードを実装した。
