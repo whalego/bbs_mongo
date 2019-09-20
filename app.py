@@ -29,8 +29,8 @@ def form():
         req = request.form
         pict = save_picture(request.files["pict"])
         if current_user.is_authenticated:
-            result = db.insert_db(user_name=req.getlist("text")[0],
-                                  text=current_user.id,
+            result = db.insert_db(user_name=current_user.id,
+                                  text=req.getlist("text")[0],
                                   pict_url=pict
                                   )
             flash(result)
