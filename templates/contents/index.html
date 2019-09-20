@@ -1,7 +1,9 @@
 {% extends "base/base.html" %}
 {% block content %}
 {% include "contents/login_form.html" %}
-{% include "contents/form.html" %}
+{% if current_user.is_authenticated == True %}
+    {% include "contents/form.html" %}
+{% endif %}
 {% for message in get_flashed_messages() %}
 <p>{{ message }}</p>
 {% endfor %}

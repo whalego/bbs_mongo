@@ -24,20 +24,18 @@ def index():
 
 
 @app.route("/form", methods=["POST"])
-@login_required
 def form():
     if request.method == "POST":
         req = request.form
         pict = save_picture(request.files["pict"])
-
-        result = db.insert_db(user_name=req.getlist("text")[0],
-                              text=req.getlist("name")[0],
-                              pict_url=pict
-                              )
-        if pict is None:
-            flash("you upload file is not image file, image upload is failed.")
-        else:
+        if current_user.is_authenticated:
+            result = db.insert_db(user_name=req.getlist("text")[0],
+                                  text=current_user.id,
+                                  pict_url=pict
+                                  )
             flash(result)
+        else:
+            flash("投稿失敗")
     return redirect(url_for("index"))
 
 
@@ -45,12 +43,21 @@ def form():
 def login_form():
     if request.method == "POST":
         user = User(request.form["account"])
-        if request.form["password"] == user.info["Password"]:
-            login_user(user)
-            flash(current_user.id)
-            return redirect(url_for("index"))
 
-    flash("login failed")
+        if user.info is not None and request.form["password"] == user.info["Password"]:
+            login_user(user)
+            return redirect(url_for("index"))
+        else:
+            flash("login failed")
+
+    return redirect(url_for("index"))
+
+
+@app.route("/logout_form", methods=["POST"])
+def logout_form():
+    if request.method == "POST":
+        logout_user()
+
     return redirect(url_for("index"))
 
 
@@ -58,9 +65,6 @@ class User(UserMixin):
     def __init__(self, name):
         self.id = name
         self.info = self._get_id()
-
-    def is_authenticated(self):
-        pass
 
     def _get_id(self):
         return account_db.search_account(self.id)
@@ -76,15 +80,19 @@ def user_loader(account_name):
 
 @login_manager.request_loader
 def request_loader(req):
-    user = User(request.form["account"])
-    if user.info and user.info["Account"] != req.form["account"]:
-        return None
-    user.is_authenticated = request.form["account"] == user.info["Password"]
-    return user
+    try:
+        user = User(req.form["account"])
+        if user.info and user.info["Account"] != req.form["account"]:
+            return None
+        user.is_authenticated = req.form["account"] == user.info["Password"]
+        return user
+    except Exception as e:
+        # ログアウト時に 400 bad request が発生する。
+        return redirect(url_for("index"))
 
 
 def save_picture(picture):
-    cache_dir = Path(r"/static/picture/")
+    cache_dir = Path(r"static/picture/")
     suffix = ["png", "jpg", "bmp", "gif"]
 
     pict_suffix = picture.filename.split(".")[-1]

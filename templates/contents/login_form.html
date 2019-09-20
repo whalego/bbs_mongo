@@ -1,8 +1,20 @@
 
+{% if current_user.is_authenticated  == True %}
+<table>
+    <td>{{ current_user.id }}</td>
+    <td>
+    <form method="POST" action="/logout_form">
+        <td><input type="submit" value="ログアウト"></td>
+    </form>
+    </td>
+</table>
+{% else %}
 <form method="POST" action="/login_form">
     <table>
-    <td>ID<input type="text" name="account"></td>
-    <td>PW<input type="password" name="password"></td>
-    <td><input type="submit" value="ログイン"></td>
+        <td>ID<input type="text" name="account"></td>
+        <td>PW<input type="password" name="password"></td>
+        <td><input type="submit" value="ログイン"></td>
     </table>
 </form>
+
+{% endif %}
