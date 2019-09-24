@@ -14,10 +14,12 @@ login_manager.login_view = "users.login"
 
 @app.route("/")
 def index():
-    item_list = [{"author": x["author"],
+    item_list = [{"id": x["_id"],
+                  "author": x["author"],
                   "text": x["text"],
                   "date": x["date"],
                   "pict": x["pict"],
+                  "del_flag": x["del_flag"]
                   } for x in db.show_db_all()]
 
     return render_template("contents/index.html", item_list=item_list)
@@ -29,15 +31,23 @@ def form():
         req = request.form
         pict = save_picture(request.files["pict"])
         if current_user.is_authenticated:
-            result = db.insert_db(user_name=current_user.id,
-                                  text=req.getlist("text")[0],
-                                  pict_url=pict
-                                  )
+            result = db.insert_post(user_name=current_user.id,
+                                    text=req.getlist("text")[0],
+                                    pict_url=pict
+                                    )
             flash(result)
         else:
             flash("投稿失敗")
     return redirect(url_for("index"))
 
+
+@app.route("/del_post", methods=["POST"])
+def del_form():
+    if request.method == "POST":
+        req = request.form
+        db.delete_post(req.getlist("id")[0], current_user.id)
+
+    return redirect(url_for("index"))
 
 @app.route("/login_form", methods=["POST"])
 def login_form():

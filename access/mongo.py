@@ -1,5 +1,6 @@
 import datetime
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 
 class DBConnection:
@@ -10,13 +11,14 @@ class DBConnection:
 
 
 class DBPostMessage(DBConnection):
-    def insert_db(self, user_name, text, pict_url=None):
+    def insert_post(self, user_name, text, pict_url=None):
         try:
             post = {
                 "author": user_name,
                 "text": text,
                 "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S"),
-                "pict": pict_url
+                "pict": pict_url,
+                "del_flag": None
             }
 
             self.collection.insert_one(post)
@@ -28,6 +30,14 @@ class DBPostMessage(DBConnection):
 
     def show_db_all(self):
         return [x for x in self.collection.find()]
+
+    def delete_post(self, del_id, del_user):
+        try:
+            self.collection.update_one({"_id": ObjectId(del_id)}, {"$set": {"del_flag": {"name": del_user}}})
+        except Exception as e:
+            print(e)
+            return "failed"
+        return "succeed"
 
 
 class DBAccount(DBConnection):
@@ -60,5 +70,6 @@ if __name__ == "__main__":
     # db = DBAccount("UserDB", "UserCollections")
     # a = db.search_account("_test_user")
     # print(a)
+    # db.delete_post("5d82d63a4dbe825064642a42", "asd")
     pass
 
