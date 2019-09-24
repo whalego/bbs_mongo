@@ -1,0 +1,68 @@
+.popupModal1 > input { /* ラジオボックス非表示 */
+    display: none;
+}
+.popupModal1 > input:nth-child(1) + label {
+    cursor: pointer;
+}
+.modalPopup2 {
+/* 初期設定 ポップアップ非表示 */
+    display: none;
+}
+
+.popupModal1 > input:nth-child(1):checked + label + input:nth-child(3) + label + input:nth-child(5) + label + .modalPopup2 {
+/* ラジオ１ チェックでポップアップ表示 */
+    display: block;
+    z-index: 998;
+    position: fixed;
+    width: 90%;
+    height: 80%;
+    left: 50%;
+    top: 50%;
+    margin-top: 30px;
+    transform: translate(-50%,-50%);
+    background: #fff;
+    padding: 10px 20px;
+    overflow: hidden;
+}
+.popupModal1 > input:nth-child(1):checked + label + input:nth-child(3) + label + input:nth-child(5) + label + .modalPopup2{
+         width: 300px;
+         height: 200px;
+         padding: 30px;
+}
+
+.popupModal1 > input:nth-child(1):checked + label + input:nth-child(3) + label + input:nth-child(5) + label + .modalPopup2 > div > img {
+/* ポップアップの中の要素 */
+max-width: 100%;
+}
+.popupModal1 > input:nth-child(1) + label ~ label {
+/* クローズのラジオボタンの非表示 */
+    display: none;
+
+}
+.popupModal1 > input:nth-child(1):checked + label + input:nth-child(3) + label {
+/* クリック時の背景 */
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.70);
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 997;
+    text-indent: -999999px;
+    overflow: hidden;
+}
+
+.popupModal1 > input:nth-child(1) + label + input:nth-child(3):checked + label + input:nth-child(5) + label + .modalPopup2,
+.popupModal1 > input:nth-child(1) + label + input:nth-child(3) + label + input:nth-child(5):checked + label + .modalPopup2 {
+/* ラジオ２と３ どっちかチェックでポップアップ非表示 */
+    display: none;
+}
+.popupModal1 .modalTitle {
+/* モーダル内のタイトルパディング部分 */
+     padding-bottom: .5em;
+     margin: .5em 0;
+     border-bottom:
+     1px solid #ccc;
+     font-weight: bold;
+}

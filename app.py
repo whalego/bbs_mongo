@@ -41,6 +41,22 @@ def form():
     return redirect(url_for("index"))
 
 
+@app.route("/reply_form", methods=["POST"])
+def replay_form():
+    # 普通のフォームと書き方が同じなので、対策を考える。
+    if request.method == "POST":
+        req = request.form
+        if current_user.is_authenticated:
+            result = db.insert_post(user_name=current_user.id,
+                                    text=req.getlist("text")[0],
+                                    reply=req.getlist("id")[0]
+                                    )
+            flash(result)
+        else:
+            flash("投稿失敗")
+    return redirect(url_for("index"))
+
+
 @app.route("/del_post", methods=["POST"])
 def del_form():
     if request.method == "POST":
@@ -48,6 +64,7 @@ def del_form():
         db.delete_post(req.getlist("id")[0], current_user.id)
 
     return redirect(url_for("index"))
+
 
 @app.route("/login_form", methods=["POST"])
 def login_form():

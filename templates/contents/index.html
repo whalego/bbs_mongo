@@ -27,9 +27,7 @@
                 {% endif %}
                 <td>
                     {% if current_user.is_authenticated == True %}
-                    <form method="POST" action="/reply">
-                        <input type="submit" value="reply">
-                    </form>
+                        {% include "contents/reply_box.html" %}
                     {% endif %}
                 </td>
                 <td>

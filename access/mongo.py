@@ -11,16 +11,26 @@ class DBConnection:
 
 
 class DBPostMessage(DBConnection):
-    def insert_post(self, user_name, text, pict_url=None):
+    def insert_post(self, user_name, text, pict_url=None, reply=None):
         try:
-            post = {
-                "author": user_name,
-                "text": text,
-                "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S"),
-                "pict": pict_url,
-                "del_flag": None
-            }
-
+            if not reply:
+                post = {
+                    "author": user_name,
+                    "text": text,
+                    "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S"),
+                    "pict": pict_url,
+                    "reply": reply,
+                    "del_flag": None
+                }
+            else:
+                post = {
+                    "author": user_name,
+                    "text": f"re: {text}",
+                    "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S"),
+                    "pict": pict_url,
+                    "reply": reply,
+                    "del_flag": None
+                }
             self.collection.insert_one(post)
         except Exception as e:
             print(e)
