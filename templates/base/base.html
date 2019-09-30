@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="jp">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css')}}">
-    <title>main page</title>
-</head>
-<body>
-{% block content %}
+    <head>
+        <meta charset="UTF-8">
+        <title>main page</title>
+    </head>
+    <body>
+        {% block content %}
 
-{% endblock %}
-</body>
+        {% endblock %}
+        <footer>
+            <p>フッターの場所</p>
+            <a href="/">top page</a>
+        </footer>
+    </body>
 </html>

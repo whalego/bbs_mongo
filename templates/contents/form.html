@@ -1,6 +1,17 @@
-
-<form method="POST" action="/form"  enctype="multipart/form-data">
+{% if form_info == "/post_form" %}
+<form method="POST" action="/post_form"  enctype="multipart/form-data">
     <p>文章<input type="text" name="text"></p>
     <p>画像<input type="file" name="pict"></p>
     <p><input type="submit" value="submit"></p>
 </form>
+{% elif form_info == "/reply_form" %}
+<td>
+    {% if current_user.is_authenticated == True %}
+        <form method="POST" action="/details/reply_form">
+        リプライ:<input type="text" name="text">
+            <input type="hidden" name="reply" value="{{reply_id}}">
+            <input type="submit" value="send">
+        </form>
+    {% endif %}
+</td>
+{% endif %}

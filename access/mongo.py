@@ -17,7 +17,7 @@ class DBPostMessage(DBConnection):
                 post = {
                     "author": user_name,
                     "text": text,
-                    "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S"),
+                    "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y/%m/%d %H:%M:%S"),
                     "pict": pict_url,
                     "reply": reply,
                     "del_flag": None
@@ -26,7 +26,7 @@ class DBPostMessage(DBConnection):
                 post = {
                     "author": user_name,
                     "text": f"re: {text}",
-                    "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y%m/%d %H:%M:%S"),
+                    "date": datetime.datetime.strftime(datetime.datetime.now(), "%Y/%m/%d %H:%M:%S"),
                     "pict": pict_url,
                     "reply": reply,
                     "del_flag": None
@@ -39,7 +39,14 @@ class DBPostMessage(DBConnection):
         return "succeed"
 
     def show_db_all(self):
+        # 使わない予定
         return [x for x in self.collection.find()]
+
+    def find_post_for_id(self, search_id):
+        return self.collection.find_one({"_id": ObjectId(search_id)})
+
+    def find_post(self, reply_id=None):
+        return [x for x in self.collection.find({"reply": reply_id})]
 
     def delete_post(self, del_id, del_user):
         try:
@@ -79,6 +86,7 @@ if __name__ == "__main__":
     # db = DBPostMessage("test_database", "test_collection")
     # db = DBAccount("UserDB", "UserCollections")
     # a = db.search_account("_test_user")
+    # a = db.find_reply("5d8c558bb816da8c4d7c5bd6")
     # print(a)
     # db.delete_post("5d82d63a4dbe825064642a42", "asd")
     pass

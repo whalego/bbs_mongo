@@ -1,0 +1,10 @@
+<td>
+    {% if current_user.is_authenticated == True and item.reply == None %}
+        <form method="POST" action="/reply_form">
+
+        リプライ:<input type="text" name="text">
+            <input type="hidden" name="reply" value="{{item.id}}">
+            <input type="submit" value="send">
+        </form>
+    {% endif %}
+</td>

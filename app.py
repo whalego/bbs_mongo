@@ -3,6 +3,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user, U
 from access.mongo import DBPostMessage, DBAccount
 from pathlib import Path
 import datetime
+from bson import ObjectId
 app = Flask(__name__)
 app.secret_key = "asd"
 db = DBPostMessage("test_database", "test_collection")
@@ -19,13 +20,31 @@ def index():
                   "text": x["text"],
                   "date": x["date"],
                   "pict": x["pict"],
+                  "reply": x["reply"],
                   "del_flag": x["del_flag"]
-                  } for x in db.show_db_all()]
+                  } for x in db.find_post()]
 
     return render_template("contents/index.html", item_list=item_list)
 
 
-@app.route("/form", methods=["POST"])
+@app.route("/details", methods=["GET"])
+def details():
+    if request.method == "GET":
+        search_id = request.args.get("post_data")
+        id_data = db.find_post_for_id(search_id)
+        reply_list = [{"id": x["_id"],
+                       "author": x["author"],
+                       "text": x["text"],
+                       "date": x["date"],
+                       "pict": x["pict"],
+                       "reply": x["reply"],
+                       "del_flag": x["del_flag"]
+                       } for x in db.find_post(search_id)]
+
+    return render_template("contents/details.html", post_data=id_data, reply_list=reply_list)
+
+
+@app.route("/post_form", methods=["POST"])
 def form():
     if request.method == "POST":
         req = request.form
@@ -41,7 +60,7 @@ def form():
     return redirect(url_for("index"))
 
 
-@app.route("/reply_form", methods=["POST"])
+@app.route("/details/reply_form", methods=["POST"])
 def replay_form():
     # 普通のフォームと書き方が同じなので、対策を考える。
     if request.method == "POST":
@@ -49,12 +68,12 @@ def replay_form():
         if current_user.is_authenticated:
             result = db.insert_post(user_name=current_user.id,
                                     text=req.getlist("text")[0],
-                                    reply=req.getlist("id")[0]
+                                    reply=req.getlist("reply")[0]
                                     )
             flash(result)
         else:
             flash("投稿失敗")
-    return redirect(url_for("index"))
+    return redirect(url_for("details", post_data=req.getlist("reply")[0]))
 
 
 @app.route("/del_post", methods=["POST"])

@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+{% block content %}
+
+{% include "contents/login_form.html" %}
+
+{% if current_user.is_authenticated == True %}
+{{post_data.id}}
+    {% set reply_id = post_data._id %}
+    {% set form_info = "/reply_form" %}
+    {% include "contents/form.html" %}
+{% endif %}
+<table border="2">
+    <tr><td colspan="2" al><center>投稿概要</center></td></tr>
+    <tr><td>名前:</td><td>{{post_data.author}}</td></tr>
+    <tr><td>投稿内容:</td><td>{{post_data.text}}</td></tr>
+    {% if post_data.pict != None %}
+        <tr><td>画像：</td><td><img src="{{post_data.pict}}" alt="さむね"></td></tr>
+    {% endif %}
+    <tr><td>投稿日時:</td><td>{{post_data.date}}</td></tr>
+</table>
+
+<table border="1">
+{% for reply in reply_list %}
+    <tr>
+        <td>{{reply.date}}</td>
+        <td>{{reply.author}}</td>
+        <td>{{reply.text}}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}
