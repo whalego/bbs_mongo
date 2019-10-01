@@ -1,8 +1,6 @@
 {% extends "base/base.html" %}
 {% block content %}
 
-{% include "contents/login_form.html" %}
-
 {% if current_user.is_authenticated == True %}
 {{post_data.id}}
     {% set reply_id = post_data._id %}

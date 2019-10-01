@@ -1,6 +1,5 @@
 {% extends "base/base.html" %}
 {% block content %}
-{% include "contents/login_form.html" %}
 {% if current_user.is_authenticated == True %}
     {% set form_info = "/post_form" %}
     {% include "contents/form.html" %}
