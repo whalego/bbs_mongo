@@ -72,6 +72,15 @@ class DBAccount(DBConnection):
             print(e)
             return "failed"
 
+    def delete_account(self, account):
+        try:
+            if account:
+                self.collection.find_one_and_delete({"Account": account})
+                return "succeed"
+        except Exception as e:
+            print(e)
+            return "failed"
+
     def search_account(self, account):
         try:
             if account:

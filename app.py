@@ -120,6 +120,16 @@ def create_account():
     return redirect(url_for("index"))
 
 
+@app.route("/delete_account", methods=["POST"])
+def delete_account():
+    if request.method == "POST":
+        del_account = current_user.id
+        logout_user()
+        result = account_db.delete_account(del_account)
+        flash(result)
+    return redirect(url_for("index"))
+
+
 @app.route("/logout_form", methods=["POST"])
 def logout_form():
     if request.method == "POST":
