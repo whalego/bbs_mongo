@@ -89,12 +89,15 @@ def del_form():
 def login_form():
     if request.method == "POST":
         crypt = Bcrypt(app)
-        user = User(request.form["account"])
-        if user.info is not None and crypt.check_password_hash(user.info["Password"], request.form["password"]):
-            login_user(user)
-            return redirect(url_for("index"))
-        else:
-            flash("login failed")
+        try:
+            user = User(request.form["account"])
+            if user.info is not None and crypt.check_password_hash(user.info["Password"], request.form["password"]):
+                login_user(user)
+            else:
+                flash("login failed")
+        except Exception as e:
+            print(e)
+            flash("error check password. use password is old?")
 
     return redirect(url_for("index"))
 

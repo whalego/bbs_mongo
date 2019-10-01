@@ -64,7 +64,7 @@ class DBAccount(DBConnection):
                 }
         try:
             if self.search_account(post["Account"]):
-                return "Already Exists"
+                return "Already Exists. please another ID."
             else:
                 self.collection.insert_one(post)
                 return "succeed"
