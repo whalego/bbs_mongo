@@ -2,7 +2,7 @@
 {% if current_user.is_authenticated  == True %}
 
 <script type="text/javascript">
-    function confirm_check(){
+    function confirm_delete_account_check(){
         return confirm("this account delete ok?");
     }
 </script>
@@ -16,7 +16,7 @@
     </form>
     </td>
     <td>
-        <form method="POST" action="/delete_account" onsubmit="return confirm_check();">
+        <form method="POST" action="/delete_account" onsubmit="return confirm_delete_account_check();">
             <td><input name="del_button" type="submit" value="このアカウントを削除"></td>
         </form>
     </td>

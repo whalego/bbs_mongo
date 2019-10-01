@@ -1,6 +1,13 @@
 {% if item.author == current_user.id %}
+<script type="text/javascript">
+    function confirm_delete_post_check(){
+        return confirm("this post delete ok?");
+    }
+</script>
+
+
 <td>
-    <form method="POST" action="/del_post">
+    <form method="POST" action="/del_post" onsubmit="return confirm_delete_post_check()">
         <input type="hidden" name="id" value="{{item.id}}">
         <input type="submit" value="delete">
     </form>
