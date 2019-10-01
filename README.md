@@ -15,3 +15,10 @@ mongod --dbpath <cahce_directory>
 ユーザのログイン機能追加(登録機能は作成していない。)
 登録したユーザでなければ投稿出来ないように修正
 登録したユーザ自身の投稿内容を削除出来るように修正
+
+### 必要なモジュール
+Flask
+Flask-Login
+pymongo
+Jinja2
+
