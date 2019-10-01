@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
+from flask_bcrypt import Bcrypt
 from access.mongo import DBPostMessage, DBAccount
 from pathlib import Path
 import datetime
-from bson import ObjectId
+
 app = Flask(__name__)
 app.secret_key = "asd"
 db = DBPostMessage("test_database", "test_collection")
@@ -23,7 +24,6 @@ def index():
                   "reply": x["reply"],
                   "del_flag": x["del_flag"]
                   } for x in db.find_post()]
-
     return render_template("contents/index.html", item_list=item_list)
 
 
@@ -88,13 +88,31 @@ def del_form():
 @app.route("/login_form", methods=["POST"])
 def login_form():
     if request.method == "POST":
+        crypt = Bcrypt(app)
         user = User(request.form["account"])
-
-        if user.info is not None and request.form["password"] == user.info["Password"]:
+        if user.info is not None and crypt.check_password_hash(user.info["Password"], request.form["password"]):
             login_user(user)
             return redirect(url_for("index"))
         else:
             flash("login failed")
+
+    return redirect(url_for("index"))
+
+
+@app.route("/create_account", methods=["POST"])
+def create_account():
+    if request.method == "POST":
+        account_name = request.form["account"]
+        password = request.form["password"]
+        if len(password) >= 6:
+            crypt = Bcrypt(app)
+            hash_password = crypt.generate_password_hash(password)
+            result = account_db.create_account(account_name, hash_password)
+
+        else:
+            result = "you type password is short! change password please."
+
+        flash(result)
 
     return redirect(url_for("index"))
 

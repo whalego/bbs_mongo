@@ -9,12 +9,22 @@
     </td>
 </table>
 {% else %}
-<form method="POST" action="/login_form">
-    <table>
+<table>
+    <tr>
+    <form method="POST" action="/login_form">
         <td>ID<input type="text" name="account"></td>
         <td>PW<input type="password" name="password"></td>
         <td><input type="submit" value="ログイン"></td>
-    </table>
-</form>
+    </form>
+    </tr>
+    <tr><td>アカウント作成は以下から</td></tr>
+    <tr>
+    <form method="POST" action="/create_account">
+        <td>ID<input type="text" name="account"></td>
+        <td>PW<input type="password" name="password"></td>
+        <td><input type="submit" value="アカウント作成"></td>
+    </form>
+    </tr>
+</table>
 
 {% endif %}
