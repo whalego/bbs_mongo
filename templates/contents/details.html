@@ -12,7 +12,7 @@
     <tr><td>名前:</td><td>{{post_data.author}}</td></tr>
     <tr><td>投稿内容:</td><td>{{post_data.text}}</td></tr>
     {% if post_data.pict != None %}
-        <tr><td>画像：</td><td><img src="{{post_data.pict}}" alt="さむね"></td></tr>
+        <tr><td>画像：</td><td><img src="data:image/jpeg;base64,{{post_data.pict}}" alt="さむね"></td></tr>
     {% endif %}
     <tr><td>投稿日時:</td><td>{{post_data.date}}</td></tr>
 </table>

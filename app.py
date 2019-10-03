@@ -2,8 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
 from flask_bcrypt import Bcrypt
 from access.mongo import DBPostMessage, DBAccount
-from pathlib import Path
-import datetime
+import base64
 
 app = Flask(__name__)
 app.secret_key = "asd"
@@ -169,18 +168,14 @@ def request_loader(req):
 
 
 def save_picture(picture):
-    cache_dir = Path(r"static/picture/")
     suffix = ["png", "jpg", "bmp", "gif"]
-
     pict_suffix = picture.filename.split(".")[-1]
-    if pict_suffix in suffix:
-        now_time = datetime.datetime.strftime(datetime.datetime.now(), "%Y%m%d%H%M%S")
-        pict_url = str(Path(cache_dir, now_time + "." + pict_suffix))
-        picture.save(pict_url)
-    else:
-        pict_url = None
-
-    return pict_url
+    try:
+        if pict_suffix in suffix:
+            return base64.b64encode(picture.read()).decode('utf8')
+    except Exception as e:
+        print(e)
+    return None
 
 
 if __name__ == "__main__":
