@@ -4,11 +4,12 @@ from flask_bcrypt import Bcrypt
 from access.mongo import DBPostMessage, DBAccount
 from pathlib import Path
 import base64
+import settingfile
 
 app = Flask(__name__)
-app.secret_key = "asd"
-db = DBPostMessage("test_database", "test_collection")
-account_db = DBAccount("UserDB", "UserCollections")
+app.secret_key = settingfile.SECRET_KEY
+db = DBPostMessage(settingfile.POST_DB_NAME, settingfile.POST_DB_COLLECTION_NAME)
+account_db = DBAccount(settingfile.ACCOUNT_DB_NAME, settingfile.ACCOUNT_DB_COLLECTION_NAME)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "users.login"
