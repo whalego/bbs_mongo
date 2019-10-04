@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, abort
+from flask import Flask, render_template, request, redirect, url_for, flash, abort, send_from_directory
 from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
 from flask_bcrypt import Bcrypt
 from access.mongo import DBPostMessage, DBAccount
+from pathlib import Path
 import base64
 
 app = Flask(__name__)
@@ -212,6 +213,10 @@ def save_picture(picture):
     except Exception as e:
         print(e)
     return None
+
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(Path(app.root_path, "cache", "favicon.png"), filename="favicon.png")
 
 
 if __name__ == "__main__":
