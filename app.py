@@ -44,7 +44,7 @@ def details():
         if request.method == "GET":
             search_id = request.args.get("post_data")
             id_data = db.find_post_for_id(search_id)
-            if id_data:
+            if id_data and id_data.get("del_flag") is None:
                 reply_list = [{"id": x["_id"],
                                "author": x["author"],
                                "text": x["text"],
@@ -213,6 +213,7 @@ def save_picture(picture):
     except Exception as e:
         print(e)
     return None
+
 
 @app.route("/favicon.ico")
 def favicon():
