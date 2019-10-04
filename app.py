@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, abort
 from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
 from flask_bcrypt import Bcrypt
 from access.mongo import DBPostMessage, DBAccount
@@ -15,30 +15,50 @@ login_manager.login_view = "users.login"
 
 @app.route("/")
 def index():
-    item_list = [{"id": x["_id"],
-                  "author": x["author"],
-                  "text": x["text"],
-                  "date": x["date"],
-                  "pict": x["pict"],
-                  "reply": x["reply"],
-                  "del_flag": x["del_flag"]
-                  } for x in db.find_post()]
+    try:
+        item_list = [{"id": x["_id"],
+                      "author": x["author"],
+                      "text": x["text"],
+                      "date": x["date"],
+                      "pict": x["pict"],
+                      "reply": x["reply"],
+                      "del_flag": x["del_flag"]
+                      } for x in db.find_post()]
+    except Exception as e:
+        print(e)
+        abort(500)
     return render_template("contents/index.html", item_list=item_list)
+
+
+@app.errorhandler(404)
+@app.errorhandler(405)
+@app.errorhandler(500)
+def server_error(event):
+    return render_template("error/page_errors.html", event=event)
 
 
 @app.route("/details", methods=["GET"])
 def details():
-    if request.method == "GET":
-        search_id = request.args.get("post_data")
-        id_data = db.find_post_for_id(search_id)
-        reply_list = [{"id": x["_id"],
-                       "author": x["author"],
-                       "text": x["text"],
-                       "date": x["date"],
-                       "pict": x["pict"],
-                       "reply": x["reply"],
-                       "del_flag": x["del_flag"]
-                       } for x in db.find_post(search_id)]
+    try:
+        if request.method == "GET":
+            search_id = request.args.get("post_data")
+            id_data = db.find_post_for_id(search_id)
+            if id_data:
+                reply_list = [{"id": x["_id"],
+                               "author": x["author"],
+                               "text": x["text"],
+                               "date": x["date"],
+                               "pict": x["pict"],
+                               "reply": x["reply"],
+                               "del_flag": x["del_flag"]
+                               } for x in db.find_post(search_id)]
+            else:
+                abort(404)
+        else:
+            abort(405)
+    except Exception as e:
+        print(e)
+        abort(404)
 
     return render_template("contents/details.html", post_data=id_data, reply_list=reply_list)
 
@@ -55,7 +75,10 @@ def form():
                                     )
             flash(result)
         else:
-            flash("投稿失敗")
+            flash("ログインをしてから投稿してください。")
+    else:
+        abort(405)
+
     return redirect(url_for("index"))
 
 
@@ -72,6 +95,9 @@ def replay_form():
             flash(result)
         else:
             flash("投稿失敗")
+    else:
+        abort(405)
+
     return redirect(url_for("details", post_data=req.getlist("reply")[0]))
 
 
@@ -80,6 +106,8 @@ def del_form():
     if request.method == "POST":
         req = request.form
         db.delete_post(req.getlist("id")[0], current_user.id)
+    else:
+        abort(405)
 
     return redirect(url_for("index"))
 
@@ -97,6 +125,8 @@ def login_form():
         except Exception as e:
             print(e)
             flash("error check password. use password is old?")
+    else:
+        abort(405)
 
     return redirect(url_for("index"))
 
@@ -115,6 +145,8 @@ def create_account():
             result = "you type password is short! change password please."
 
         flash(result)
+    else:
+        abort(405)
 
     return redirect(url_for("index"))
 
@@ -126,6 +158,8 @@ def delete_account():
         logout_user()
         result = account_db.delete_account(del_account)
         flash(result)
+    else:
+        abort(405)
     return redirect(url_for("index"))
 
 
@@ -133,6 +167,8 @@ def delete_account():
 def logout_form():
     if request.method == "POST":
         logout_user()
+    else:
+        abort(405)
 
     return redirect(url_for("index"))
 

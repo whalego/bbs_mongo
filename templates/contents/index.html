@@ -7,6 +7,8 @@
 {% for message in get_flashed_messages() %}
 <p>{{ message }}</p>
 {% endfor %}
+
+{% if item_list|length != 0 %}
 <table border="1">
     <tr>
         <td>日付</td>
@@ -33,4 +35,8 @@
         </tr>
     {% endfor %}
 </table>
+{% else %}
+<p>１件も登録されてないよ</p>
+{% endif %}
+
 {% endblock %}

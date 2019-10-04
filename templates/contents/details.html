@@ -17,6 +17,7 @@
     <tr><td>投稿日時:</td><td>{{post_data.date}}</td></tr>
 </table>
 
+{% if reply_list|length != 0 %}
 <table border="1">
 {% for reply in reply_list %}
     <tr>
@@ -26,4 +27,8 @@
     </tr>
 {% endfor %}
 </table>
+{% else %}
+<p>１件もリプライが来ていないよ</p>
+{% endif %}
+
 {% endblock %}
